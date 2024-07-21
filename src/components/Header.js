@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import icon from '../assets/icon.png';
 
 const Header = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -17,7 +18,7 @@ const Header = () => {
         {user ? (
           <div className="user-info">
             <span>{user.username}</span>
-            <img src={user.avatar} alt="avatar" className="avatar" />
+            <img src={icon} alt="avatar" className="avatar" />
             <button onClick={handleLogout} className="btn btn-danger">Log Out</button>
           </div>
         ) : (
