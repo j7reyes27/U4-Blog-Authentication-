@@ -12,6 +12,11 @@
   font-size: 24px;
 }
 
+.home-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .auth-buttons {
   display: flex;
   gap: 10px;
@@ -46,8 +51,16 @@
   align-items: center;
 }
 
+.user-info .profile-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+}
+
 .user-info span {
   margin-right: 10px;
+  line-height: 40px;
 }
 
 .user-info .avatar {

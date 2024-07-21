@@ -1,49 +1,59 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import './Profile.css';
 
 const Profile = () => {
+  const { username } = useParams();
   const { register, handleSubmit, setValue, formState: { errors } } = useForm();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    if (userData) {
-      setUser(userData);
-      setValue('username', userData.username);
-      setValue('email', userData.email);
-      setValue('avatar', userData.avatar);
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser && storedUser.username === username) {
+      setUser(storedUser);
+      setValue('username', storedUser.username);
+      setValue('email', storedUser.email);
+      setValue('avatar', storedUser.avatar);
     }
-  }, [setValue]);
+  }, [username, setValue]);
 
-  const onSubmit = data => {
-    console.log(data);
-    localStorage.setItem('user', JSON.stringify(data));
+  const onSubmit = (data) => {
+    const updatedUser = { ...user, ...data };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+    setUser(updatedUser);
+    alert('Profile updated successfully');
   };
 
+  if (!user) return <div>Loading...</div>;
+
   return (
-    <div>
+    <div className="profile-container">
       <h2>Edit Profile</h2>
-      {user && (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <label>Username</label>
-          <input type="text" {...register('username', { required: 'Username is required' })} />
-          {errors.username && <p>{errors.username.message}</p>}
+      <form onSubmit={handleSubmit(onSubmit)} className="profile-form">
+        <label>Username</label>
+        <input
+          type="text"
+          {...register('username', { required: 'Username is required' })}
+        />
+        {errors.username && <p className="error">{errors.username.message}</p>}
 
-          <label>Email</label>
-          <input type="email" {...register('email', { required: 'Email is required' })} />
-          {errors.email && <p>{errors.email.message}</p>}
+        <label>Email</label>
+        <input
+          type="email"
+          {...register('email', { required: 'Email is required', pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: 'Enter a valid email address' } })}
+        />
+        {errors.email && <p className="error">{errors.email.message}</p>}
 
-          <label>New Password</label>
-          <input type="password" {...register('password', { minLength: { value: 6, message: 'Minimum length is 6' } })} />
-          {errors.password && <p>{errors.password.message}</p>}
+        <label>Avatar URL</label>
+        <input
+          type="text"
+          {...register('avatar', { required: 'Avatar URL is required' })}
+        />
+        {errors.avatar && <p className="error">{errors.avatar.message}</p>}
 
-          <label>Avatar URL</label>
-          <input type="text" {...register('avatar', { required: 'Avatar URL is required' })} />
-          {errors.avatar && <p>{errors.avatar.message}</p>}
-
-          <button type="submit">Save</button>
-        </form>
-      )}
+        <button type="submit" className="btn btn-primary">Save</button>
+      </form>
     </div>
   );
 };

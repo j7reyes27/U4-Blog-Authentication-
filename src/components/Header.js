@@ -11,14 +11,20 @@ const Header = () => {
     window.location.href = '/';
   };
 
+  const avatar = user?.avatar ? user.avatar : icon;
+
   return (
     <header className="header">
-      <h1>Realworld Blog</h1>
+      <h1>
+        <Link to="/" className="home-link">Realworld Blog</Link>
+      </h1>
       <nav>
         {user ? (
           <div className="user-info">
-            <span>{user.username}</span>
-            <img src={icon} alt="avatar" className="avatar" />
+            <Link to={`/profile/${user.username}`} className="profile-link">
+              <span>{user.username}</span>
+              <img src={avatar} alt="avatar" className="avatar" />
+            </Link>
             <button onClick={handleLogout} className="btn btn-danger">Log Out</button>
           </div>
         ) : (
